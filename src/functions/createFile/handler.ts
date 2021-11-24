@@ -3,6 +3,7 @@ import { formatJSONResponse } from "@libs/apiGateway";
 import { middyfy } from "@libs/lambda";
 import * as AWS from "aws-sdk";
 import * as multipart from "aws-lambda-multipart-parser";
+import * as fs from "fs";
 
 import schema from "./schema";
 
@@ -39,6 +40,7 @@ const upload_s3 = async (form, S3) => {
 
   try {
     const data = await S3.putObject(request).promise();
+    // fs.renameSync
     return data;
   } catch (e) {
     console.log("Error uploading to S3: ", e);

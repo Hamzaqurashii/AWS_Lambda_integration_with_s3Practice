@@ -500,14 +500,26 @@ var middyfy = (handler) => {
 // src/functions/getFile/handler.ts
 var AWS = __toModule(require("aws-sdk"));
 var hello = async (event) => {
+  AWS.config.update({ region: "eu-west-2" });
   const S32 = new AWS.S3({
     s3ForcePathStyle: true,
     accessKeyId: "S3RVER",
     secretAccessKey: "S3RVER",
     endpoint: new AWS.Endpoint("http://localhost:4569")
   });
-  const data = await S32.getObject({ Key: "z6fk8ahb6kf_Screenshot (3).png", Bucket: "local-bucket" }).promise();
-  console.log(data);
+  const textract = new AWS.Textract();
+  const data = await S32.getObject({
+    Key: "l098i94i5li_Screenshot (3).png",
+    Bucket: "local-bucket"
+  }).promise();
+  const data1 = {
+    Document: {
+      Bytes: data.Body
+    },
+    FeatureTypes: ["TABLES"]
+  };
+  const anal = await textract.analyzeDocument(data1).promise();
+  console.log(anal);
   return formatJSONResponse({ data, event });
 };
 var main = middyfy(hello);
